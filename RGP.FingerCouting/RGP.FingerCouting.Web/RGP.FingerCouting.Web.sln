@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCouting.API", "RGP.FingerCouting.API\RGP.FingerCouting.API.csproj", "{1AA03A15-12CD-4B1C-A07C-D34286755281}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCounting.Data", "RGP.FingerCounting.Data\RGP.FingerCounting.Data.csproj", "{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCounting.Helpers", "RGP.FingerCounting.Helpers\RGP.FingerCounting.Helpers.csproj", "{5F32F16C-6430-43D5-96F5-7B5A5196E12C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1AA03A15-12CD-4B1C-A07C-D34286755281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AA03A15-12CD-4B1C-A07C-D34286755281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AA03A15-12CD-4B1C-A07C-D34286755281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AA03A15-12CD-4B1C-A07C-D34286755281}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A895ABF7-769F-4CED-AAC9-E523BEDD2C0A}
+	EndGlobalSection
+EndGlobal
