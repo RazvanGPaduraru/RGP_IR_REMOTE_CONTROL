@@ -9,9 +9,12 @@ import DetailsScreen from '../Areas/Dashboard/Details';
 import { Linking } from 'react-native';
 import { useAuth } from '../../Contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
+import { DrawerContent } from '../Areas/Dashboard/DrawerContent';
+import { Support } from '../Areas/Dashboard/Support';
+import { Settings } from '../Areas/Dashboard/Settings';
 
 
-type dashboardScreenProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
+export type dashboardScreenProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 
 
 const Drawer = createDrawerNavigator<DashboardStackParamsList>();
@@ -20,13 +23,6 @@ interface CustomDrawerContentProps {
     signOut : () => void
 }
 
-const CustomDrawerContent = (props : CustomDrawerContentProps) => {
-    return (
-        <DrawerContentScrollView {...props}>
-          <DrawerItem label="Log out" onPress={() => props.signOut()} />
-        </DrawerContentScrollView>
-    )
-}
 
 
 const AppRoutes = () => {
@@ -47,9 +43,11 @@ const AppRoutes = () => {
       }
     return(
         <>
-            <Drawer.Navigator initialRouteName="Home" drawerContent={props => <CustomDrawerContent signOut={() => handleSignOut() }/>}>
+            <Drawer.Navigator initialRouteName="Home" drawerContent={props => <DrawerContent/>}>
                 <Drawer.Screen name="Home" component={Home} />
                 <Drawer.Screen name="Details" component={DetailsScreen} />
+                <Drawer.Screen name="Support" component={Support}/>
+                <Drawer.Screen name="Settings" component={Settings}/>
             </Drawer.Navigator>
         
             </>

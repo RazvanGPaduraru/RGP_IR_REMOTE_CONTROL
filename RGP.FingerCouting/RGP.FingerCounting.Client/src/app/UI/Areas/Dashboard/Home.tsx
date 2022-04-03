@@ -1,53 +1,51 @@
-import { useNavigation } from '@react-navigation/native';
+
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
-import {Button, View, StyleSheet, TouchableOpacity} from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import AuthContext, { useAuth } from '../../../Contexts/AuthContext';
+import {View, StyleSheet, TouchableOpacity, StatusBar, Text, Button} from 'react-native';
+import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { DashboardStackParamsList } from '../../../Screens/DashboardStackParamsList';
 
 type dashboardScreenProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-    },
-  });
-  
-  const Dashboard = () => {
-    const {signOut} = useAuth();
-    const navigation = useNavigation<dashboardScreenProp>();
-    const [loading, setLoading] = useState(false);
+  container: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  title: {
+    fontSize: 24
+  },
+  info: {
+    fontSize: 18
+  },
+  paragraph: {
+    margin: 15
+  }
+});
 
-    const handleSignOut = async () =>{
-      try{
-        setLoading(true)
-        await signOut();
-      }catch(err){
-        console.log(err);
+const Home = () => {
 
-      }finally{
-        setLoading(false)
-      }
-      
-    }
+  const { colors } = useTheme();
+
+  const theme = useTheme();
   
     return (
-      <div>
-          
-        <Button title='Details'
-
-            onPress={() =>
-              navigation.navigate('Details')}
-            />  
-          
-          <Button title="Sign Out" onPress={handleSignOut} />
-
-      </div>
-          
+      <View style={styles.container}>
+        <StatusBar barStyle= { theme.dark ? "light-content" : "dark-content" }/>
+        <Text style={[{color: colors.text}, styles.title]}>Welcome</Text>
+        <Text style={[styles.info]}>This is E.C.L.A.I.R</Text>
+        <Text style={[styles.info]}>(Entity Controller Limited at Infra Red) {"\n"}</Text>
+        <Text style={[styles.paragraph]}>E.C.L.A.I.R is a great device to smartify any device that you have in your home which usses an infra-red remote</Text>
+        <Button
+          onPress={() => {}}
+          title="Acces your remotes"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
       
+      </View>
     );
-  };
+};
   
-  export default Dashboard;
+  export default Home;

@@ -11,6 +11,9 @@ namespace RGP.FingerCounting.Data.DBContext
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
+        public DbSet<Remote> Remotes { get; set; }
+        public DbSet<Button> Button { get; set; }
+        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }

@@ -39,7 +39,6 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     const response = await signIn(userName, password).catch(err => {
-      console.log(err + "aaaaaaaaaa");
       Alert.alert(
         'Hey There!',
         'Two button alert dialog',

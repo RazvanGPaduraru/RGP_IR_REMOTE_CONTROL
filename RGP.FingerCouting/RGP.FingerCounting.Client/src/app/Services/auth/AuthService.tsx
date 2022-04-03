@@ -14,6 +14,7 @@ interface Response {
 
 class AuthService{
 
+  //private readonly BASE_URL: string = "http://6e26-2a02-a58-84af-6200-c849-97fd-deee-ce94.ngrok.io/api/Authenticate";
   private readonly BASE_URL: string = 'https://localhost:7259/api/Authenticate';
   
   signIn = (userName:string, password:string) : Promise<Response> => {
