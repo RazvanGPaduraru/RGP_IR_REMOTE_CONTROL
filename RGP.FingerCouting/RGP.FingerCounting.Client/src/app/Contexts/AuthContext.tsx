@@ -3,10 +3,11 @@ import AuthService from '../Services/auth/AuthService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, ActivityIndicator, Alert } from 'react-native';
 import api from '../Services/api';
+import { User } from '../Models/User';
 
 interface AuthContextData {
     signed: boolean;
-    user: object | null;
+    user: User | null;
     signIn(username: string, password: string): Promise<void>;
     signOut(): void;
   }
@@ -14,7 +15,7 @@ interface AuthContextData {
   const AuthContext = createContext<AuthContextData>({} as AuthContextData);
   
   export const AuthProvider: React.FC = ({children}) => {
-    const [user, setUser] = useState<object | null>(null);
+    const [user, setUser] = useState<User | null>();
     const [loading, setLoading] = useState(true);
 
 
@@ -42,8 +43,11 @@ interface AuthContextData {
       try{
         const response = await AuthService.signIn(username, password);
         let user = {
-          user: response.name,
-          email: response.email
+          name: response.name,
+          email: response.email,
+          token: response.token,
+          refreshToken: response.refreshToken,
+          expiration: response.expiration,
         }
 
         setUser(user);
@@ -57,8 +61,8 @@ interface AuthContextData {
 
         await AsyncStorage.setItem('@reactNativeAuth:token', response.token);
 
-      }catch(err){
-        throw "Wrong email or password";
+      }catch(err : any){
+        throw JSON.stringify(err);
       }
       
     }
@@ -78,7 +82,7 @@ interface AuthContextData {
     }
   
     return (
-      <AuthContext.Provider value={{signed: !!user, user: user, signIn, signOut}}>
+      <AuthContext.Provider value={{signed: !!user, user: user as any, signIn, signOut}}>
         {children}
       </AuthContext.Provider>
     );

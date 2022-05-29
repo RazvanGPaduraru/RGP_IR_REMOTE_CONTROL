@@ -37,7 +37,6 @@ export const DrawerContent = (props: any) => {
               </View>
             </View>
           </View>
-          
         </View>
 
         <Drawer.Section style={styles.drawerSection}>
@@ -53,12 +52,20 @@ export const DrawerContent = (props: any) => {
 
           <DrawerItem
             icon={({ color, size }) => (
+              <Icon name="home" color={color} size={size} />
+            )}
+            label="Remotes"
+            onPress={() => {
+              navigation.navigate("Remotes");
+            }}
+          />
+
+          <DrawerItem
+            icon={({ color, size }) => (
               <Icon name="user" color={color} size={size} />
             )}
             label="Profile"
-            onPress={() => {
-              
-            }}
+            onPress={() => {}}
           />
 
           <DrawerItem
@@ -66,9 +73,7 @@ export const DrawerContent = (props: any) => {
               <Icon name="bookmark" color={color} size={size} />
             )}
             label="Bookmarks"
-            onPress={() => {
-              
-            }}
+            onPress={() => {}}
           />
           <DrawerItem
             icon={({ color, size }) => (
@@ -90,18 +95,16 @@ export const DrawerContent = (props: any) => {
           />
         </Drawer.Section>
         <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem 
-                    icon={({color, size}) => (
-                        <Icon 
-                        name="log-out" 
-                        color={color}
-                        size={size}
-                        />
-                    )}
-                    label="Sign Out"
-                    onPress={() => {signOut()}}
-                />
-            </Drawer.Section>
+          <DrawerItem
+            icon={({ color, size }) => (
+              <Icon name="log-out" color={color} size={size} />
+            )}
+            label="Sign Out"
+            onPress={() => {
+              signOut();
+            }}
+          />
+        </Drawer.Section>
       </DrawerContentScrollView>
     </View>
   );

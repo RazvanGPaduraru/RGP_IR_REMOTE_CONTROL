@@ -12,7 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerContent } from '../Areas/Dashboard/DrawerContent';
 import { Support } from '../Areas/Dashboard/Support';
 import { Settings } from '../Areas/Dashboard/Settings';
-
+import RemotesView from '../Areas/Dashboard/RemotesView';
+import ButtonsView from '../Areas/Dashboard/ButtonsView';
+import { Button } from 'react-native-paper';
 
 export type dashboardScreenProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 
@@ -48,6 +50,8 @@ const AppRoutes = () => {
                 <Drawer.Screen name="Details" component={DetailsScreen} />
                 <Drawer.Screen name="Support" component={Support}/>
                 <Drawer.Screen name="Settings" component={Settings}/>
+                <Drawer.Screen name="Remotes" component={RemotesView} />
+                <Drawer.Screen name="Buttons" component={ButtonsView} options={({ route }) => ({ title: route.params?.remoteName})} />
             </Drawer.Navigator>
         
             </>

@@ -12,8 +12,8 @@ using RGP.FingerCounting.Data.DBContext;
 namespace RGP.FingerCounting.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220403135625_AddRemotesAndButtons")]
-    partial class AddRemotesAndButtons
+    [Migration("20220403151306_AddingRemotes")]
+    partial class AddingRemotes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -254,7 +254,7 @@ namespace RGP.FingerCounting.Data.Migrations
 
                     b.HasIndex("RemoteId");
 
-                    b.ToTable("Button");
+                    b.ToTable("Buttons");
                 });
 
             modelBuilder.Entity("RGP.FingerCounting.Data.EFModels.Remote", b =>
@@ -270,7 +270,13 @@ namespace RGP.FingerCounting.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Remotes");
                 });
@@ -335,6 +341,22 @@ namespace RGP.FingerCounting.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Remote");
+                });
+
+            modelBuilder.Entity("RGP.FingerCounting.Data.EFModels.Remote", b =>
+                {
+                    b.HasOne("RGP.FingerCounting.Data.EFModels.AppUser", "User")
+                        .WithMany("Remotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RGP.FingerCounting.Data.EFModels.AppUser", b =>
+                {
+                    b.Navigation("Remotes");
                 });
 
             modelBuilder.Entity("RGP.FingerCounting.Data.EFModels.Remote", b =>

@@ -14,8 +14,12 @@ namespace RGP.FingerCounting.Data.Configurations
         public void Configure(EntityTypeBuilder<Remote> builder)
         {
             builder.HasKey(r => r.Id);
-            
-            
+            builder.HasOne<AppUser>(s => s.User)
+                .WithMany(g => g.Remotes)
+                .HasForeignKey(s => s.UserId);
+            builder.Property(x => x.RemoteJsonData)
+                .HasColumnType("nvarchar(max)");
+
         }
     }
 }

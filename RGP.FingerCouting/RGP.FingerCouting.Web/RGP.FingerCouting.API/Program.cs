@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RGP.FingerCounting.Data.DBContext;
 using RGP.FingerCounting.Data.EFModels;
+using RPG.FingerCounting.Domain.Logic.Services;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
@@ -42,34 +44,41 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-
-
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddCors(c => { c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().WithOrigins("http://localhost", "http://localhost:19006")); });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("*")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod(); ;
+        });
+});
+
+#region DEPENDENCY INJECTION
+builder.Services.AddTransient<RemotesService>();
+builder.Services.AddTransient<ButtonsService>();
+builder.Services.AddTransient<RPYService>();
+#endregion
+
+
+#region MIDDLEWARE
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors(cors => cors.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost", "http://localhost:19006"));
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
@@ -80,4 +89,10 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
+
+
+
 app.Run();
+
+#endregion
+

@@ -3,20 +3,24 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RGP.FingerCounting.Data.DBContext;
 using RGP.FingerCounting.Data.EFModels;
 using RGP.FingerCounting.Helpers.DTO;
 using RGP.FingerCounting.Helpers.JWT;
 using RGP.FingerCounting.Helpers.Shared;
+using RGP.FingerCouting.API.ActionFilters;
 using RGP.FingerCouting.API.Controllers.Abstract;
 
 namespace RGP.FingerCouting.API.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AuthenticateController : ControllerBase
+    [AllowCrossSiteJson]
+    public class AuthenticateController : BaseApiController
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -25,7 +29,8 @@ namespace RGP.FingerCouting.API.Controllers
         public AuthenticateController(
             UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ApplicationDbContext ctx) : base(ctx)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -67,7 +72,7 @@ namespace RGP.FingerCouting.API.Controllers
                     Email = user.Email,
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     RefreshToken = refreshToken,
-                    Expiration = token.ValidTo
+                    Expiration = user.RefreshTokenExpiryTime
                 });
             }
             return Unauthorized();

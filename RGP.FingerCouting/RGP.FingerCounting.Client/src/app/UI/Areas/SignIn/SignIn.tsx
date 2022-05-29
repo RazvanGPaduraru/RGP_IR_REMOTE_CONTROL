@@ -41,9 +41,9 @@ const SignIn = () => {
     const response = await signIn(userName, password).catch(err => {
       Alert.alert(
         'Hey There!',
-        'Two button alert dialog',
+        err,
         [
-          {text: 'Yes', onPress: () => console.log('Yes button clicked')},
+          {text: 'Yes', onPress: () => console.log(err)},
           {text: 'No', onPress: () => console.log('No button clicked'), style: 'cancel'},
         ],
         { 
@@ -130,7 +130,6 @@ const SignIn = () => {
             ]}
             autoCapitalize="none"
             onChangeText={(val) => setuserName(val)}
-
           />
           {checkTextInputChange ? (
             <Animatable.View animation="bounceIn">

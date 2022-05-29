@@ -1,8 +1,8 @@
 export interface User {
-    shopItemId: number;
-    title: string;
-    category: string;
-    description: string;
-    price: number;
-    imagePath: string;
+    name: string,
+    email: string,
+    token?: string,
+    refreshToken?: string,
+    expiration?: Date,
+  
 }

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Cors" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -24,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RGP.FingerCounting.Data\RGP.FingerCounting.Data.csproj" />
     <ProjectReference Include="..\RGP.FingerCounting.Helpers\RGP.FingerCounting.Helpers.csproj" />
+    <ProjectReference Include="..\RPG.FingerCounting.Domain.Logic\RPG.FingerCounting.Domain.Logic.csproj" />
   </ItemGroup>
 
 </Project>

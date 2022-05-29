@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCouting.API", "RGP.FingerCouting.API\RGP.FingerCouting.API.csproj", "{1AA03A15-12CD-4B1C-A07C-D34286755281}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGP.FingerCouting.API", "RGP.FingerCouting.API\RGP.FingerCouting.API.csproj", "{1AA03A15-12CD-4B1C-A07C-D34286755281}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCounting.Data", "RGP.FingerCounting.Data\RGP.FingerCounting.Data.csproj", "{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGP.FingerCounting.Data", "RGP.FingerCounting.Data\RGP.FingerCounting.Data.csproj", "{8013C12B-5C92-4E50-9BFF-CE90FBBC2E45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RGP.FingerCounting.Helpers", "RGP.FingerCounting.Helpers\RGP.FingerCounting.Helpers.csproj", "{5F32F16C-6430-43D5-96F5-7B5A5196E12C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RGP.FingerCounting.Helpers", "RGP.FingerCounting.Helpers\RGP.FingerCounting.Helpers.csproj", "{5F32F16C-6430-43D5-96F5-7B5A5196E12C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPG.FingerCounting.Domain.Logic", "RPG.FingerCounting.Domain.Logic\RPG.FingerCounting.Domain.Logic.csproj", "{6149F872-4B65-4535-8414-566B81C6FACA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F32F16C-6430-43D5-96F5-7B5A5196E12C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6149F872-4B65-4535-8414-566B81C6FACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6149F872-4B65-4535-8414-566B81C6FACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6149F872-4B65-4535-8414-566B81C6FACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6149F872-4B65-4535-8414-566B81C6FACA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

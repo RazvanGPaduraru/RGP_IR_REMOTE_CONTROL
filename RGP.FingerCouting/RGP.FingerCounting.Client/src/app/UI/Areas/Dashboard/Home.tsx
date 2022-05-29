@@ -1,11 +1,12 @@
 
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext, useState } from 'react';
 import {View, StyleSheet, TouchableOpacity, StatusBar, Text, Button} from 'react-native';
 import { ActivityIndicator, useTheme } from 'react-native-paper';
 import { DashboardStackParamsList } from '../../../Screens/DashboardStackParamsList';
+import { dashboardScreenProp } from '../../Routes/AppRoutes';
 
-type dashboardScreenProp = StackNavigationProp<DashboardStackParamsList, 'Home'>;
 
 const styles = StyleSheet.create({
   container: {
@@ -29,6 +30,7 @@ const Home = () => {
   const { colors } = useTheme();
 
   const theme = useTheme();
+  const navigation = useNavigation<dashboardScreenProp>();
   
     return (
       <View style={styles.container}>
@@ -38,7 +40,7 @@ const Home = () => {
         <Text style={[styles.info]}>(Entity Controller Limited at Infra Red) {"\n"}</Text>
         <Text style={[styles.paragraph]}>E.C.L.A.I.R is a great device to smartify any device that you have in your home which usses an infra-red remote</Text>
         <Button
-          onPress={() => {}}
+          onPress={() => {navigation.navigate("Remotes");}}
           title="Acces your remotes"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"

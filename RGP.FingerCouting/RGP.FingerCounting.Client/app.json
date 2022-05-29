@@ -30,6 +30,9 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
-  }
+    },
+    "sdkVersion": "44.0.0",
+    "description": ""
+  },
+  "name": "rgp.fingercounting.client"
 }
