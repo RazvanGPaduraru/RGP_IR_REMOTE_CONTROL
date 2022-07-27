@@ -40,9 +40,6 @@ namespace RGP.FingerCouting.API.Controllers
                     UserID = CurrentUserID,
                     Description = model.Description
                 });
-                var resp = await _rpyService.AddRemote(model.Name, model.Description != null ? model.Description : "");
-                await _remotesService.UpdateRemoteJSONData(remoteId, resp);
-                _logger.LogInformation(resp);
                 return Ok(remoteId);
             }
 

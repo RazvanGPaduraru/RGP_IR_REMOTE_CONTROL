@@ -19,11 +19,12 @@ import AuthContext from "../../../Contexts/AuthContext";
 import { Remote } from "../../../Models/Remote";
 import { DashboardStackParamsList } from "../../../Screens/DashboardStackParamsList";
 import RemotesService from "../../../Services/Core/RemotesService";
-
+import { CommonActions } from '@react-navigation/native';
+type Props = StackScreenProps<DashboardStackParamsList, "Remotes">;
 
 type authScreens = StackNavigationProp<DashboardStackParamsList, 'Remotes'>;
 
-const RemotesView = () => {
+const RemotesView = (props) => {
   const navigation = useNavigation<authScreens>();
   const [remotes, setRemotes] = useState<Remote[]>([]);
   const [loading, setLoading] = useState(false);
@@ -37,19 +38,28 @@ const RemotesView = () => {
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Do something when the screen is focused
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Do something when the screen is focused
 
-      return () => {
-        setError("");
-        setLoading(false);
-        setVisible(false);
-        setRemotes([]);
+  //     return () => {
+  //       setError("");
+  //       setLoading(false);
+  //       setVisible(false);
+  //       setRemotes([]);
 
-      };
-    }, [])
-  );
+  //     };
+  //   }, [])
+  // );
+
+  useEffect(() => {
+    fetchRemotes();
+    const willFocusSubscription = props.navigation.addListener('focus', () => {
+      fetchRemotes();
+  });
+
+  return willFocusSubscription;
+  }, []);
 
   const fetchRemotes = async () => {
     setLoading(true);
@@ -95,6 +105,19 @@ const RemotesView = () => {
     fetchRemotes();
   }, []);
 
+  const onRemotePress = (remoteId, remoteName) =>{
+    props.navigation.setParams({remoteId:undefined, remoteName:undefined});
+    //navigation.navigate('Buttons', {remoteId: remoteId, remoteName : remoteName})
+    console.log(remoteId)
+    navigation.dispatch(CommonActions.navigate({
+      name: 'Buttons',
+      params : {
+        remoteId: remoteId, remoteName : null
+
+      }
+    }))
+  }
+
   const renderRemotes = () => {
     if (loading) {
       return <ActivityIndicator />;
@@ -112,7 +135,7 @@ const RemotesView = () => {
             <DataTable.Title numeric>Description</DataTable.Title>
           </DataTable.Header>
           {remotes.map((remote) => (
-            <DataTable.Row key={remote.id} onPress = {() => navigation.navigate('Buttons', {remoteId:remote?.id as any, remoteName: remote.name as any})}>
+            <DataTable.Row key={remote.id} onPress = {() => {onRemotePress(remote.id, remote.name)}}>
               <DataTable.Cell>{remote.name}</DataTable.Cell>
               <DataTable.Cell numeric>{remote.description}</DataTable.Cell>
             </DataTable.Row>
@@ -125,24 +148,27 @@ const RemotesView = () => {
     return (
       <Modal
         animationType={"slide"}
-        transparent={false}
+        transparent={true}
         visible={visible}
         onRequestClose={() => {
           Alert.alert("Modal has now been closed.");
         }}
       >
         <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
          
           
           <TextInput
             style={styles.input}
             placeholder="Remote name"
+            placeholderTextColor="lightgray" 
             value={remoteName}
             onChangeText={(text) => setRemoteName(text)}
           />
           <TextInput
             style={[styles.input, { height: 100}]}
             placeholder="Description"
+            placeholderTextColor="lightgray" 
             multiline={true}
             numberOfLines={4}
             value={description}
@@ -165,6 +191,7 @@ const RemotesView = () => {
             >
               Cancel
             </Button>
+            </View>
           </View>
 
         </View>
@@ -234,7 +261,7 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   input: {
-    color: "#2AC062",
+    color: "black",
     borderColor: "#2AC062",
     borderWidth: 1,
     borderRadius: 6,
@@ -257,6 +284,27 @@ const styles = StyleSheet.create({
     padding: 35,
     alignItems: "center",
 
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: 350,
+    height: 300,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
   
 });

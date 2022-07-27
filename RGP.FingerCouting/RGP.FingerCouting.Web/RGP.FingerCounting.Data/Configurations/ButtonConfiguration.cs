@@ -17,6 +17,10 @@ namespace RGP.FingerCounting.Data.Configurations
             builder.HasOne<Remote>(s => s.Remote)
                 .WithMany(g => g.Buttons)
                 .HasForeignKey(s => s.RemoteId);
+            builder.Property(e => e.PulsesData).HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
+            );
 
 
         }

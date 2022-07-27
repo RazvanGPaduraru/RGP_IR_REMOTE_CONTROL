@@ -44,6 +44,13 @@ namespace RGP.FingerCouting.API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("{id}")]
+        public async Task<string> PressButton(Guid id)
+        {
+            return await _buttonsService.PushButton(id);
+        }
+
         [HttpPut]
         public async Task<IActionResult> UpdateButton([FromBody] ButtonDM button)
         {

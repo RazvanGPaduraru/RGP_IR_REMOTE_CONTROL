@@ -10,7 +10,6 @@
     ],
     "moduleResolution": "node",
     "noEmit": true,
-    "strict": true,
     "target": "esnext"
   },
   "exclude": [

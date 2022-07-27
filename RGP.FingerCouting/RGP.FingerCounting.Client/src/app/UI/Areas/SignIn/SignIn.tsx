@@ -9,7 +9,8 @@ import {
   StatusBar,
   TouchableOpacity,
   Alert,
-  TextInput
+  TextInput,
+  ActivityIndicator
 } from "react-native";
 import AuthContext, { useAuth } from "../../../Contexts/AuthContext";
 import {  useTheme } from "react-native-paper";
@@ -22,6 +23,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../../Screens/AuthStackParamsList";
 import { useNavigation } from "@react-navigation/native";
 import { Constants } from "../../../Constants/Constants";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type authScreens = StackNavigationProp<AuthStackParamList, 'SignIn'>;
 
@@ -38,19 +40,29 @@ const SignIn = () => {
   const navigation = useNavigation<authScreens>();
 
   const handleSignIn = async () => {
-    const response = await signIn(userName, password).catch(err => {
-      Alert.alert(
-        'Hey There!',
-        err,
-        [
-          {text: 'Yes', onPress: () => console.log(err)},
-          {text: 'No', onPress: () => console.log('No button clicked'), style: 'cancel'},
-        ],
-        { 
-          cancelable: true 
-        }
-      );
-    });
+    
+    try{
+      setloading(true);
+      const response = await signIn(userName, password).catch(err => {
+        Alert.alert(
+          'Hey There!',
+          err,
+          [
+            {text: 'Yes', onPress: () => console.log(err)},
+            {text: 'No', onPress: () => console.log('No button clicked'), style: 'cancel'},
+          ],
+          { 
+            cancelable: true 
+          }
+        );
+      });
+
+    } catch(err){
+      console.log(err);
+    } finally{
+      setloading(false);
+    }
+    
   };
 
   const textInputChange = (val: string) => {
@@ -87,8 +99,16 @@ const SignIn = () => {
     }
   };
 
+  if(loading){
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.mainContainer}>
       <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <View style={styles.header}>
         <Text style={styles.text_header}>Welcome!</Text>
@@ -121,6 +141,7 @@ const SignIn = () => {
 
           <TextInput
             placeholder="Your username"
+            placeholderTextColor="lightgrey"
             value={userName}
             style={[
               styles.textInput,
@@ -160,6 +181,7 @@ const SignIn = () => {
           <Feather name="lock" color={colors.text} size={20} />
           <TextInput
             placeholder="Your Password"
+            placeholderTextColor="lightgrey"
             value={password}
             secureTextEntry={secureTextEntry ? true : false}
             style={[
@@ -188,11 +210,24 @@ const SignIn = () => {
           </Animatable.View>
         )}
 
-        <TouchableOpacity>
-          <Text style={{ color: "#01A7C2", marginTop: 15 }}>
-            Forgot password?
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.linksView}>
+          <TouchableOpacity>
+            <Text style={{ color: "#01A7C2", marginTop: 15 }}>
+              Forgot password?
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity>
+            <Text style={{ color: "#01A7C2", marginTop: 15, alignSelf: 'flex-end' }}>
+              Contact
+            </Text>
+          </TouchableOpacity>
+          
+        </View>
+
+        
+
+
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
@@ -243,14 +278,18 @@ const SignIn = () => {
         </View>
         </ScrollView>
       </Animatable.View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: Constants.appBackgroundColor,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center"
   },
   header: {
     flex: 1,
@@ -314,6 +353,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  linksView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  }
 });
 
 export default SignIn;

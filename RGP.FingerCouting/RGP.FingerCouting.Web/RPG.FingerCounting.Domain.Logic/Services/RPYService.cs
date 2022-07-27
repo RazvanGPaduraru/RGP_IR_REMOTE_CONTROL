@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace RPG.FingerCounting.Domain.Logic.Services
 {
     public class RPYService
     {
         private static readonly HttpClient _client = new HttpClient();
-        private static readonly string _baseUrl = "http://192.168.100.67:5000/api/remotes";
+        //private static readonly string _baseUrl = "http://192.168.0.213:5000/api/remotes";
+        private static readonly string _baseUrl = "http://192.168.100.79:5000/api/remotes";
+        
         private readonly ILogger<RPYService> _logger;
 
 
@@ -20,56 +24,18 @@ namespace RPG.FingerCounting.Domain.Logic.Services
             _logger = logger;
         }
 
-        public async Task<string> AddRemote(string remoteName, string remoteDescription )
+
+        public async Task<string> AddButton()
         {
             try
             {
-                var body = new Dictionary<string, string>
-                {
-                    {"remoteName", remoteName},
-                    {"remoteDescription", remoteDescription}
-                };
-                var content = new FormUrlEncodedContent(body);
-                var response = await _client.PostAsync(_baseUrl + "/createRemote", content);
-                if (response.IsSuccessStatusCode)
-                { 
-                    var responseString = await response.Content.ReadAsStringAsync();
-                    string result = responseString.Trim();
-                    result = result.Substring(0, result.LastIndexOf("\""));
-                    _logger.LogCritical(responseString);
-                    return result.Substring(1);
-                }
-                else
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-               
-            } catch (Exception e)
-            {
-                _logger.LogCritical(e.Message);
-                return e.Message;
-            }
 
-        }
-
-        public async Task<string> AddButton(string remoteData, string buttonName)
-        {
-            try
-            {
-                var body = new Dictionary<string, string>
-                {
-                    {"remoteData", remoteData},
-                    {"buttonName", buttonName}
-                };
-                var content = new FormUrlEncodedContent(body);
-                var response = await _client.PostAsync(_baseUrl + "/addButton", content);
+                var response = await _client.GetAsync(_baseUrl + "/addButton");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
-                    string result = responseString.Trim();
-                    result = result.Substring(0, result.LastIndexOf("\""));
                     _logger.LogCritical(responseString);
-                    return result.Substring(1);
+                    return responseString;
                 }
                 else
                 {
@@ -83,30 +49,34 @@ namespace RPG.FingerCounting.Domain.Logic.Services
             }
         }
 
-        public async Task<string> RemoveButton(string remoteData, string buttonName)
+        public async Task<string> PressButton(List<int> PulsesData)
         {
             try
             {
-                var body = new Dictionary<string, string>
+                var data = JsonConvert.SerializeObject(new
                 {
-                    {"remoteData", remoteData},
-                    {"buttonName", buttonName}
-                };
-                var content = new FormUrlEncodedContent(body);
-                var response = await _client.PostAsync(_baseUrl + "/deleteButton", content);
+                    Name = "Remote",
+                    Data = PulsesData
+                });
+                var jsonData = new StringContent(data, Encoding.UTF8, "application/json");
+                //var body = new Dictionary<string, IEnumerable<int>>
+                //{
+                //    {"pulsesData", PulsesData},
+                  
+                //};
+                //var content = new FormUrlEncodedContent(body);
+                var response = await _client.PostAsync(_baseUrl + "/pushButton", jsonData);
                 if (response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
-                    string result = responseString.Trim();
-                    result = result.Substring(0, result.LastIndexOf("\""));
-                    result = result.Replace("\\", "");
-                    _logger.LogCritical(responseString);
-                    return result.Substring(1);
+                  
+                    return responseString;
                 }
                 else
                 {
                     throw new Exception(response.ReasonPhrase);
                 }
+
             }
             catch (Exception e)
             {
@@ -115,4 +85,5 @@ namespace RPG.FingerCounting.Domain.Logic.Services
             }
         }
     }
+    
 }

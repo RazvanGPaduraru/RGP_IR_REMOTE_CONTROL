@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RGP.FingerCounting.Data\RGP.FingerCounting.Data.csproj" />
     <ProjectReference Include="..\RGP.FingerCounting.Helpers\RGP.FingerCounting.Helpers.csproj" />
   </ItemGroup>

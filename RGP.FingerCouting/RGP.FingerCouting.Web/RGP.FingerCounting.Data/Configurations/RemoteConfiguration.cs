@@ -17,8 +17,7 @@ namespace RGP.FingerCounting.Data.Configurations
             builder.HasOne<AppUser>(s => s.User)
                 .WithMany(g => g.Remotes)
                 .HasForeignKey(s => s.UserId);
-            builder.Property(x => x.RemoteJsonData)
-                .HasColumnType("nvarchar(max)");
+ 
 
         }
     }

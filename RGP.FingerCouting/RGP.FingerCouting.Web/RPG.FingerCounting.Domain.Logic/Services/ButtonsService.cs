@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
@@ -9,6 +10,7 @@ using RGP.FingerCounting.Data.DBContext;
 using RGP.FingerCounting.Data.EFModels;
 using RGP.FingerCounting.Helpers.DM;
 using RGP.FingerCounting.Helpers.DTO;
+using Newtonsoft.Json;
 
 namespace RPG.FingerCounting.Domain.Logic.Services
 {
@@ -65,14 +67,31 @@ namespace RPG.FingerCounting.Domain.Logic.Services
                 Description = button.Description,
                 RemoteId = button.RemoteId,
             };
-
+            
             _ctx.Buttons.Add(newButton);
             var remote = await _ctx.Remotes.FirstOrDefaultAsync(e => e.Id == button.RemoteId);
-            var resp = await _rpyService.AddButton(remote.RemoteJsonData, button.Name);
-            remote.RemoteJsonData = resp;
+            var resp = await _rpyService.AddButton();
+
+            int[]? pulses = JsonConvert.DeserializeObject<int[]>(resp);
+            if (pulses != null)
+            {
+                newButton.PulsesData = pulses.ToList();
+            }
+
             await _ctx.SaveChangesAsync();
 
             return newButton.Id;
+        }
+
+        public async Task<string> PushButton(Guid buttonId)
+        {
+            var button = await _ctx.Buttons.FirstOrDefaultAsync(e => e.Id == buttonId);
+            if (button == null)
+            {
+                return "Button not found";
+            }
+            var resp = await _rpyService.PressButton(button.PulsesData);
+            return resp;
         }
 
         public async Task<bool> UpdateButton(ButtonDM button)

@@ -11,6 +11,7 @@ namespace RGP.FingerCounting.Helpers.DM
         public Guid? Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
+        public List<int> PulsesData { get; set; }
         public Guid UserID { get; set; }
     }
 }

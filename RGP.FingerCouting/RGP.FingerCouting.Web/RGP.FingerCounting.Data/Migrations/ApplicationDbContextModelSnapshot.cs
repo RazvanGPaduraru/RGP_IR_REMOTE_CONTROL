@@ -245,6 +245,9 @@ namespace RGP.FingerCounting.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PulsesData")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("RemoteId")
                         .HasColumnType("uniqueidentifier");
 
@@ -266,9 +269,6 @@ namespace RGP.FingerCounting.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RemoteJsonData")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

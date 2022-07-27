@@ -23,11 +23,14 @@ interface AuthContextData {
       const loadStorageData = async () =>{
         const storageUser = await AsyncStorage.getItem('@reactNativeAuth:user');
         const storageToken = await AsyncStorage.getItem('@reactNativeAuth:token');
+        const tokenExpirationDate:any = await AsyncStorage.getItem('@reactNativeAuth:tokenExpirationDate');
+
+
         
 
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
-        if (storageUser && storageToken) {
+        if (storageUser && storageToken && new Date().toLocaleString() < new Date(tokenExpirationDate).toLocaleString()) {
           setUser(JSON.parse(storageUser));
           
         }
@@ -57,6 +60,11 @@ interface AuthContextData {
         await AsyncStorage.setItem(
           '@reactNativeAuth:user',
           JSON.stringify(user),
+        );
+
+        await AsyncStorage.setItem(
+          '@reactNativeAuth:tokenExpirationDate',
+          JSON.stringify(user.expiration),
         );
 
         await AsyncStorage.setItem('@reactNativeAuth:token', response.token);

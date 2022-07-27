@@ -49,7 +49,7 @@ const SplashScreen = () => {
                     colors={[Constants.appButtonBackground, Constants.appButtonBackground]}
                     style={styles.signIn}
                 >
-                    <Text style={styles.textSign}>Get Started</Text>
+                    <Text style={styles.textSign}>Sign In</Text>
                     <MaterialIcons 
                         name="navigate-next"
                         color="#fff"

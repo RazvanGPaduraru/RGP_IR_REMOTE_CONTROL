@@ -10,6 +10,7 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { LinearGradient } from "expo-linear-gradient";
@@ -34,10 +35,21 @@ const SignInScreen = () => {
   const [confirmSecureTextEntry, setconfirmSecureTextEntry] = useState(true);
   const navigation = useNavigation<authScreens>();
   const { colors } = useTheme();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const signUp = async () =>{
+      setIsLoading(true)
       if(password == confirmPassword && userName.length > 6 && validateEmail(email)){
-          await AuthService.signUp(userName, password, email);
+          try{
+            var resp = await AuthService.signUp(userName, password, email);
+
+
+          } catch(e){
+
+          } finally{
+            setIsLoading(false);
+          }
+          
       }
   }
 
@@ -65,8 +77,17 @@ const SignInScreen = () => {
     setconfirmSecureTextEntry(!confirmSecureTextEntry);
   };
 
+  if(isLoading){
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator />
+      </View>
+    )
+  }
+
   return (
-    <View style={styles.container}>
+
+   <View style={styles.mainContainer}>
       <StatusBar backgroundColor="#009387" barStyle="light-content" />
       <View style={styles.header}>
         <Text style={styles.text_header}>Register Now!</Text>
@@ -123,6 +144,7 @@ const SignInScreen = () => {
             <Feather name="lock" color="#05375a" size={20} />
             <TextInput
               placeholder="Your Password"
+              placeholderTextColor="lightgrey"
               secureTextEntry={secureTextEntry ? true : false}
               style={styles.textInput}
               autoCapitalize="none"
@@ -229,9 +251,18 @@ const SignInScreen = () => {
 export default SignInScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: Constants.appBackgroundColor,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center"
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10
   },
   header: {
     flex: 1,

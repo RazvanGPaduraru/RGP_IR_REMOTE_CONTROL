@@ -52,7 +52,7 @@ export const DrawerContent = (props: any) => {
 
           <DrawerItem
             icon={({ color, size }) => (
-              <Icon name="home" color={color} size={size} />
+              <Icon name="activity" color={color} size={size} />
             )}
             label="Remotes"
             onPress={() => {

@@ -17,69 +17,86 @@ import { DashboardStackParamsList } from "../../../Screens/DashboardStackParamsL
 import ButtonsService from "../../../Services/Core/ButtonsService";
 import { useFocusEffect } from "@react-navigation/native";
 import { RefreshControl, SafeAreaView, ScrollView } from 'react-native';
+import Icon from "react-native-vector-icons/Feather";
 
 type Props = StackScreenProps<DashboardStackParamsList, "Buttons">;
-const wait = (timeout : any) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
 
 
-
-const ButtonsView = (props: Props) => {
-  const remoteId = props.route.params.remoteId;
-  const { navigation } = props;
-  const [loading, setLoading] = useState(false);
+const ButtonsView = ({navigation, route}) => {
+  const {remoteId} = route.params;
+  //const { navigation } = props;
+  const [isLoading, setisLoading] = useState<Boolean>(false);
   const [buttons, setButtons] = useState<AppButton[]>([]);
   const [error, setError] = useState("");
-  const [visible, setVisible] = useState(false);
   const [buttonName, setButtonName] = useState("");
   const [buttonDescription, setButtonDescription] = useState("");
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [buttonId, setButtonId] = useState("");
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
+  const [buttonId, setButtonId] = useState<string>("");
+
+  const [isEditModalVisible, setisEditModalVisible] = useState(false);
+  const [isInsertModalVisible, setIsInsertModalVisibl] = useState(false);
+
+  const [isReadOnly, setIsReadOnly] = useState(true);
+
+
+  const showEditModal = () => setisEditModalVisible(true);
+  const hideEditModal = () => setisEditModalVisible(false);
+
+  const showInsertModal = () => setIsInsertModalVisibl(true);
+  const hideInsertModal = () => setIsInsertModalVisibl(false);
+  
+
+
   const { colors } = useTheme();
+
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+  useEffect(() => {
+    fetchButtons();
   }, []);
 
+  // useEffect(() => {
+  //   fetchButtons();
+  //   const willFocusSubscription = navigation.addListener('focus', () => {
+  //     fetchButtons();
+  // },[]);
+
+  // return willFocusSubscription;
+  // }, []);
   useFocusEffect(
     React.useCallback(() => {
       // Do something when the screen is focused
 
       return () => {
         setError("");
-        setLoading(false);
-        setVisible(false);
+        setisLoading(false);
+        setisEditModalVisible(false);
         setButtonName("");
         setButtonDescription("");
         setIsEditMode(false);
         setButtonId("");
+        
       };
     }, [])
   );
 
   const fetchButtons = async () => {
-    setLoading(true);
+    console.log('-----' + remoteId);
+    setisLoading(true);
     try {
       const response = await ButtonsService.getAllButtons(remoteId);
       setButtons(response);
     } catch (err: any) {
       setError(err.message);
     }
-    setLoading(false);
+    setisLoading(false);
   };
 
-  useEffect(() => {
-    fetchButtons();
-  }, []);
+ 
 
   const handleSubmit = async () => {
-    setLoading(true);
+    setisLoading(true);
     try {
       await ButtonsService.insertButton({
         name: buttonName,
@@ -88,16 +105,16 @@ const ButtonsView = (props: Props) => {
       });
       setButtonDescription("");
       setButtonName("");
-      hideModal();
+      hideInsertModal();
       fetchButtons();
     } catch (err: any) {
       setError(err.message);
     }
-    setLoading(false);
+    setisLoading(false);
   };
 
   const handleUpdate = async () => {
-    setLoading(true);
+    setisLoading(true);
     try {
       await ButtonsService.updateButton({
         id: buttonId,
@@ -107,25 +124,28 @@ const ButtonsView = (props: Props) => {
       });
       setButtonDescription("");
       setButtonName("");
-      hideModal();
+      hideEditModal();
       fetchButtons();
     } catch (err: any) {
       setError(err.message);
     }
-    setLoading(false);
+    setisLoading(false);
+    setButtonDescription("");
+    setButtonName("");
+    hideEditModal();
   };
 
   const onButtonClick = (button: AppButton) => {
+    setButtonId(button.id);
+    setButtonName(button.name);
+    setButtonDescription(button.description);   
     setIsEditMode(true);
-    setButtonName(button.name as any);
-    setButtonDescription(button.description as any);
-    showModal();
+    showEditModal();
   };
 
+
   const renderButtons = () => {
-    if (loading) {
-      return <ActivityIndicator />;
-    }
+   
     if (error) {
       return <Text>{error}</Text>;
     }
@@ -135,6 +155,7 @@ const ButtonsView = (props: Props) => {
           <DataTable.Header>
             <DataTable.Title>Name</DataTable.Title>
             <DataTable.Title>Description</DataTable.Title>
+            <DataTable.Title>Send command</DataTable.Title>
           </DataTable.Header>
           {buttons.map((button) => (
             <DataTable.Row
@@ -143,6 +164,8 @@ const ButtonsView = (props: Props) => {
             >
               <DataTable.Cell>{button.name}</DataTable.Cell>
               <DataTable.Cell>{button.description}</DataTable.Cell>
+              <DataTable.Cell style={styles.centeredInDiv} onPress={() => pressButton(button.id)}><Icon name="send" style={styles.centeredInDiv} size={20}/> </DataTable.Cell>
+              {/* <DataTable.Cell><Button mode="contained" onPress={() => onButtonPress(button)}> Press</Button></DataTable.Cell> */}
             </DataTable.Row>
           ))}
         </DataTable>
@@ -150,7 +173,7 @@ const ButtonsView = (props: Props) => {
     );
   };
 
-  const editButtonModal = () => {
+  const renderEditButtonModal = () => {
     return (
       <Modal
         animationType="slide"
@@ -158,72 +181,69 @@ const ButtonsView = (props: Props) => {
         visible={isEditMode}
         onRequestClose={() => {
           setIsEditMode(false);
+          
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Edit Button</Text>
             <TextInput
-              style={styles.input}
+              style={isReadOnly ? styles.readonlyInput : styles.input}
+              editable = {!isReadOnly}
               placeholder="Button Name"
+              placeholderTextColor="lightgray" 
               value={buttonName}
               onChangeText={(text) => setButtonName(text)}
             />
             <TextInput
-              style={styles.input}
+              style={isReadOnly ? styles.readonlyInput : styles.input}
               placeholder="Button Description"
+              placeholderTextColor="lightgray" 
+              editable = {!isReadOnly}
               value={buttonDescription}
               onChangeText={(text) => setButtonDescription(text)}
             />
             <View style={styles.buttonContainer}>
               <Button
                 mode="contained"
-                onPress={() => {
+                onPress={isReadOnly ? () => setIsReadOnly(false) : () => {
                   handleUpdate();
                 }}
               >
-                update
+                {isReadOnly? "Edit" : "Update"}
               </Button>
               <Button
                 mode="contained"
                 onPress={() => {
                   setIsEditMode(false);
+                  setIsReadOnly(true);
                 }}
               >
                 Cancel
               </Button>
             </View>
-            <Button
-              mode="contained"
-              onPress={() => {
-                setIsEditMode(false);
-              }}
-              style={{
-                marginTop: 10,
-                width: "80%",
-              }}
-            >
-              Press Button
-            </Button>
+            
           </View>
         </View>
       </Modal>
     );
   };
 
-  const renderModal = () => {
+  const renderCreateButtonModal = () => {
     return (
       <Modal
         animationType={"slide"}
-        transparent={false}
-        visible={visible}
+        transparent={true}
+        visible={isInsertModalVisible}
         onRequestClose={() => {
           Alert.alert("Modal has now been closed.");
         }}
       >
-        <View style={styles.modalContainer}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
           <TextInput
             style={styles.input}
+            placeholderTextColor="lightgray" 
             placeholder="Button name"
             onChangeText={(text) => setButtonName(text)}
             value={buttonName}
@@ -232,6 +252,7 @@ const ButtonsView = (props: Props) => {
             style={[styles.input, { height: 100 }]}
             onChangeText={(text) => setButtonDescription(text)}
             placeholder="Description"
+            placeholderTextColor="lightgray" 
             multiline={true}
             numberOfLines={4}
             value={buttonDescription}
@@ -248,40 +269,88 @@ const ButtonsView = (props: Props) => {
             <Button
               mode="contained"
               onPress={() => {
-                hideModal();
+                hideInsertModal();
               }}
             >
               Cancel
             </Button>
+           
           </View>
+        </View>
         </View>
       </Modal>
     );
   };
 
-  return (
+  const pressButton = async (buttonId:string) =>{
+    setisLoading(true);
+    try {
+      console.log(buttonId)
+      await ButtonsService.pressButton(buttonId);
+      
+    } catch (err: any) {
+      setError(err.message);
+    }
+    setIsEditMode(false);
+    setisLoading(false);
+  }
+
+  return(
+    isLoading == true ? <ActivityIndicator /> : 
     <SafeAreaView>
-      <ScrollView
+    <ScrollView
+      >
+      <View style={styles.container}>
+        {renderEditButtonModal()}
+        {renderCreateButtonModal()}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            setButtonDescription(null)
+            setButtonId(null)
+            setButtonName(null)
+            showInsertModal();
+          }}
         >
-        <View style={styles.container}>
-          {editButtonModal()}
-          {renderModal()}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              showModal();
-            }}
-          >
-            <Text style={styles.buttonText}>Add Button</Text>
-          </TouchableOpacity>
-          {renderButtons()}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+          <Text style={styles.buttonText}>Add Button</Text>
+        </TouchableOpacity>
+        <View>
+        <DataTable style={styles.table}>
+          <DataTable.Header>
+            <DataTable.Title>Name</DataTable.Title>
+            <DataTable.Title>Description</DataTable.Title>
+            <DataTable.Title>Send command</DataTable.Title>
+          </DataTable.Header>
+          {buttons.map((button) => (
+            <DataTable.Row
+              key={button.id}
+              onPress={() => onButtonClick(button)}
+            >
+              <DataTable.Cell>{button.name}</DataTable.Cell>
+              <DataTable.Cell>{button.description}</DataTable.Cell>
+              <DataTable.Cell style={styles.centeredInDiv} onPress={() => pressButton(button.id)}><Icon name="send" style={styles.centeredInDiv} size={20}/> </DataTable.Cell>
+              {/* <DataTable.Cell><Button mode="contained" onPress={() => onButtonPress(button)}> Press</Button></DataTable.Cell> */}
+            </DataTable.Row>
+          ))}
+        </DataTable>
+      </View>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
+
+  )
+}
+    
+
 
 const styles = StyleSheet.create({
+
+  centeredInDiv: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    
+  },
   container: {
     padding: 25,
     flex: 1,
@@ -318,7 +387,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   input: {
-    color: "#2AC062",
+    color: "black",
     borderColor: "#2AC062",
     borderWidth: 1,
     borderRadius: 6,
@@ -326,6 +395,18 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "80%",
     alignSelf: "center",
+  },
+  readonlyInput:{
+    backgroundColor: "#E5E4E2",
+    color: "black",
+    borderColor: "#2AC062",
+    borderWidth: 1,
+    borderRadius: 6,
+    marginBottom: 20,
+    padding: 10,
+    width: "80%",
+    alignSelf: "center",
+
   },
   buttonContainer: {
     display: "flex",

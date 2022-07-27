@@ -12,6 +12,7 @@ namespace RGP.FingerCounting.Data.EFModels
         public string Name { get; set; }
         public string? Description { get; set; }
         public Guid RemoteId { get; set; }
+        public List<int>? PulsesData { get; set; }
         public virtual Remote Remote { get; set; }
     }
 }

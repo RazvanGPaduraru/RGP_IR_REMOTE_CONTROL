@@ -76,18 +76,7 @@ namespace RPG.FingerCounting.Domain.Logic.Services
             await _ctx.SaveChangesAsync();
             return true;
         }
-
-        public async Task<bool> UpdateRemoteJSONData(Guid remoteId, string remoteData)
-        {
-            var remoteToUpdate = await _ctx.Remotes.FirstOrDefaultAsync(r => r.Id == remoteId);
-            if (remoteToUpdate == null)
-            {
-                return false;
-            }
-            remoteToUpdate.RemoteJsonData = remoteData;
-            await _ctx.SaveChangesAsync();
-            return true;
-        }
+        
 
 
     }

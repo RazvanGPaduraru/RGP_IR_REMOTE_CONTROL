@@ -29,6 +29,12 @@ class ButtonService{
                 .catch((error) => reject(error));
         });
     }
+    pressButton  = (buttonId: string) : Promise<string> => {
+        return new Promise((resolve, reject) => {
+            api.get(`${this.BASE_URL}/PressButton/${buttonId}`).then(resp => resolve(resp.data))
+                .catch((error) => reject(error));
+        });
+    }
     
 }
 
